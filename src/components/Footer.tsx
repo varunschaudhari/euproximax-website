@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Mail, MapPin, Phone, Facebook, Twitter, Linkedin, Instagram, ArrowRight } from 'lucide-react'
 import { motion } from 'framer-motion'
+import { handleImageError } from '../utils/imageErrorHandler'
 
 export default function Footer() {
   const quickLinks = [
@@ -61,13 +62,10 @@ export default function Footer() {
               >
                 <div className="mb-8">
                   <img
-                    src="/PNG.png"
+                    src="/logo.png"
                     alt="EuProximaX Logo"
                     className="h-14 w-auto object-contain filter brightness-0 invert mb-6"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement
-                      target.src = '/MVP.jpg'
-                    }}
+                    onError={handleImageError}
                   />
                   {/* <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent">
                     EuProximaX

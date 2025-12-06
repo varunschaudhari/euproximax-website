@@ -26,7 +26,7 @@ export default function Header() {
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center space-x-3">
             <img
-              src="/PNG.png"
+              src="/logo.png"
               alt="EuProximaX Logo"
               className="h-12 w-auto object-contain"
             />

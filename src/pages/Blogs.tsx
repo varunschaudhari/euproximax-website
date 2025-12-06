@@ -5,6 +5,7 @@ import { ChangeEvent, FormEvent, useCallback, useEffect, useMemo, useState } fro
 import { fetchBlogs, BlogPost, submitBlogProposal } from '../services/blogService'
 import { ApiError } from '../utils/apiClient'
 import { useToast } from '../context/ToastContext'
+import { handleImageError } from '../utils/imageErrorHandler'
 
 const formatDate = (value?: string) => {
     if (!value) return ''
@@ -31,6 +32,8 @@ export default function Blogs() {
         summary: '',
         reference: '',
     })
+    const [coverImage, setCoverImage] = useState<File | null>(null)
+    const [imagePreview, setImagePreview] = useState<string | null>(null)
     const [submissionError, setSubmissionError] = useState<string | null>(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const { showSuccess, showError } = useToast()
@@ -73,12 +76,38 @@ export default function Blogs() {
             summary: '',
             reference: '',
         })
+        setCoverImage(null)
+        setImagePreview(null)
         setSubmissionError(null)
     }
 
     const handleSubmissionChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = event.target
         setSubmissionForm((prev) => ({ ...prev, [name]: value }))
+    }
+
+    const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0]
+        if (file) {
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                setSubmissionError('Please select a valid image file.')
+                return
+            }
+            // Validate file size (5MB max)
+            if (file.size > 5 * 1024 * 1024) {
+                setSubmissionError('Image size must be less than 5MB.')
+                return
+            }
+            setCoverImage(file)
+            setSubmissionError(null)
+            // Create preview
+            const reader = new FileReader()
+            reader.onloadend = () => {
+                setImagePreview(reader.result as string)
+            }
+            reader.readAsDataURL(file)
+        }
     }
 
     const handleSubmitArticle = async (event: FormEvent) => {
@@ -98,6 +127,7 @@ export default function Blogs() {
                 title: submissionForm.title.trim(),
                 summary: submissionForm.summary.trim(),
                 reference: submissionForm.reference?.trim() || undefined,
+                coverImage: coverImage || undefined,
             })
             showSuccess('Thank you! Our editorial team will review your submission.')
             resetSubmissionForm()
@@ -187,10 +217,7 @@ export default function Blogs() {
                                 src={featuredPost?.coverImage || '/JPEG_Dark_BG.jpg'}
                                 alt={featuredPost?.title || 'Blogs'}
                                 className="w-full h-full object-cover"
-                                onError={(e) => {
-                                    const target = e.target as HTMLImageElement
-                                    target.src = '/MVP.jpg'
-                                }}
+                                onError={handleImageError}
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 via-transparent to-transparent"></div>
                         </div>
@@ -262,13 +289,10 @@ export default function Blogs() {
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
                                 <div className="relative h-64 lg:h-auto overflow-hidden">
                                     <motion.img
-                                        src={featuredPost.coverImage || '/MVP.jpg'}
+                                        src={featuredPost.coverImage || '/JPEG_Dark_BG.jpg'}
                                         alt={featuredPost.title}
                                         className="w-full h-full object-cover"
-                                        onError={(e) => {
-                                            const target = e.target as HTMLImageElement
-                                            target.src = '/MVP.jpg'
-                                        }}
+                                        onError={handleImageError}
                                         whileHover={{ scale: 1.05 }}
                                         transition={{ duration: 0.5 }}
                                     />
@@ -353,13 +377,10 @@ export default function Blogs() {
                                     {/* Blog Image */}
                                     <div className="relative h-56 overflow-hidden bg-gray-900">
                                         <motion.img
-                                            src={post.coverImage || '/MVP.jpg'}
+                                            src={post.coverImage || '/JPEG_Dark_BG.jpg'}
                                             alt={post.title}
                                             className="w-full h-full object-cover"
-                                            onError={(e) => {
-                                                const target = e.target as HTMLImageElement
-                                                target.src = '/MVP.jpg'
-                                            }}
+                                            onError={handleImageError}
                                             whileHover={{ scale: 1.1 }}
                                             transition={{ duration: 0.5 }}
                                         />
@@ -530,6 +551,39 @@ export default function Blogs() {
                                     className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-primary focus:outline-none"
                                     placeholder="Link to draft, portfolio, or research"
                                 />
+                            </div>
+                            <div className="space-y-1">
+                                <label className="text-xs font-semibold text-gray-700" htmlFor="submission-image">
+                                    Cover Image (Optional)
+                                </label>
+                                <input
+                                    id="submission-image"
+                                    type="file"
+                                    accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
+                                    onChange={handleImageChange}
+                                    className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-primary focus:outline-none file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
+                                />
+                                <p className="text-xs text-gray-500">JPEG, PNG, WEBP, or GIF. Max 5MB.</p>
+                                {imagePreview && (
+                                    <div className="mt-2 relative">
+                                        <img
+                                            src={imagePreview}
+                                            alt="Preview"
+                                            className="w-full h-48 object-cover rounded-lg border border-gray-200"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setCoverImage(null)
+                                                setImagePreview(null)
+                                            }}
+                                            className="absolute top-2 right-2 bg-rose-500 text-white rounded-full p-1.5 hover:bg-rose-600 transition-colors"
+                                            aria-label="Remove image"
+                                        >
+                                            ✕
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                             {submissionError && <p className="text-xs text-rose-600">{submissionError}</p>}
                             <div className="flex items-center justify-end gap-2">

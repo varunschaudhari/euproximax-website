@@ -23,25 +23,25 @@ export default function About() {
       name: 'Tanaya Chaudhari',
       location: 'INDIA',
       role: 'Administrative Assistant – EuProximaX Innovation Services',
-      image: 'https://euproximax.com/uploads/partners/1762188881_1761162623_1761151095_1760668198_WhatsApp%20Image%202025-10-16%20at%209.41.14%20PM.jpeg'
+      image: '/tanaya-chaudhari.jpg'
     },
     {
       name: 'Dr. Jyoti Chaudhari',
       location: 'INDIA',
       role: 'Strategic Advisor & Founder – EuProximaX Innovation Services',
-      image: 'https://euproximax.com/uploads/partners/1762188894_1761163830_1761162813_WhatsApp%20Image%202025-10-21%20at%204.58.43%20AM.jpeg'
+      image: '/jyoti-chaudhari.jpg'
     },
     {
       name: 'Prerana Chaudhari',
       location: 'INDIA',
       role: 'Project Manager (South Asia & India)– EuProximaX Innovation Services',
-      image: 'https://euproximax.com/uploads/partners/1762188906_1761145881_1760668450_WhatsApp%20Image%202025-10-16%20at%2010.01.01%20PM%20(1).jpeg'
+      image: '/prerana-chaudhari.jpg'
     },
     {
       name: 'Pravin Shinde',
       location: 'USA & INDIA',
       role: 'Director of Innovation Services – EuProximaX Innovation Services',
-      image: 'https://euproximax.com/uploads/partners/1762190145_Pravin.jpeg'
+      image: '/pravin-shinde.jpg'
     },
     {
       name: 'Dr. Sandeep Sonawane',
@@ -65,7 +65,7 @@ export default function About() {
       name: 'Dr. Prakash Wankhedkar',
       location: 'INDIA',
       role: 'Academic & Research Associate– External Associate EuProximaX Innovation Services',
-      image: undefined
+      image: '/prakash-wankhedkar.jpg'
     },
     {
       name: 'Harshika Suryawanshi',
@@ -250,13 +250,10 @@ export default function About() {
           >
             <div className="relative h-64 md:h-80 rounded-3xl overflow-hidden shadow-2xl">
               <img
-                src="/JPEG_White_BG.jpg"
+                src="/JPEG_Dark_BG.jpg"
                 alt="EuProximaX"
                 className="w-full h-full object-cover"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement
-                  target.src = '/MVP.jpg'
-                }}
+                onError={handleImageError}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 via-transparent to-transparent"></div>
             </div>

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { useState, useEffect, useMemo } from 'react'
 import { fetchPublicEvents, EventRecord } from '../services/eventService'
 import { ApiError } from '../utils/apiClient'
+import { handleImageError } from '../utils/imageErrorHandler'
 
 export default function EventGallery() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
@@ -145,10 +146,7 @@ export default function EventGallery() {
                 src="/JPEG_Dark_BG.jpg"
                 alt="Event Gallery"
                 className="w-full h-full object-cover"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement
-                  target.src = '/MVP.jpg'
-                }}
+                onError={handleImageError}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 via-transparent to-transparent"></div>
             </div>
@@ -255,14 +253,11 @@ export default function EventGallery() {
                             ? event.heroImage.startsWith('http')
                               ? event.heroImage
                               : `${import.meta.env.VITE_API_BASE_URL?.replace('/api/v1', '') || 'http://localhost:3000'}${event.heroImage}`
-                            : '/MVP.jpg'
+                            : '/JPEG_Dark_BG.jpg'
                         }
                         alt={event.heroImageAlt || event.title}
                         className="w-full h-full object-cover"
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement
-                          target.src = '/MVP.jpg'
-                        }}
+                        onError={handleImageError}
                         whileHover={{ scale: 1.1 }}
                         transition={{ duration: 0.5 }}
                       />
@@ -392,10 +387,7 @@ export default function EventGallery() {
                       src={image.src}
                       alt={image.alt}
                       className="w-full h-full object-cover"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement
-                        target.src = '/MVP.jpg'
-                      }}
+                      onError={handleImageError}
                       whileHover={{ scale: 1.1 }}
                       transition={{ duration: 0.5 }}
                     />
@@ -441,10 +433,7 @@ export default function EventGallery() {
                 src={selectedImage}
                 alt="Gallery"
                 className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement
-                  target.src = '/MVP.jpg'
-                }}
+                onError={handleImageError}
               />
               <motion.button
                 whileHover={{ scale: 1.1 }}

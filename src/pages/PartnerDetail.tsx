@@ -20,7 +20,7 @@ const partnersData: Record<string, {
         email: 'tanaya@euproximax.com',
         bio: 'Tanaya Chaudhari is the Administrative Assistant at EuProximaX Innovation Services. She provides vital support in managing daily operations, coordinating with stakeholders, and ensuring smooth execution of administrative tasks. Her responsibilities include handling documentation, assisting with regulatory and tax-related activities, and supporting company leadership in internal communications and logistics. Tanaya plays an essential role in maintaining the operational backbone of the organization.',
         expertise: ['Administrative Management', 'Documentation', 'Regulatory Compliance', 'Tax Activities', 'Internal Communications', 'Logistics Coordination'],
-        image: 'https://euproximax.com/uploads/partners/1762188881_1761162623_1761151095_1760668198_WhatsApp%20Image%202025-10-16%20at%209.41.14%20PM.jpeg',
+        image: '/tanaya-chaudhari.jpg',
     },
     'dr-jyoti-chaudhari': {
         name: 'Dr. Jyoti Chaudhari',
@@ -29,7 +29,7 @@ const partnersData: Record<string, {
         email: 'jyoti@euproximax.com',
         bio: 'Dr. Jyoti Adhar Chaudhari is the Founder and Strategic Advisor of EuProximaX Innovation Services, where she leads initiatives that connect education, research, and entrepreneurship to accelerate idea-to-impact innovation. A distinguished academic and visionary leader, she has spent over a decade mentoring students, educators, and professionals in fields related to institutional growth, innovation policy, and creative problem-solving. Her leadership philosophy emphasizes empowering individuals to transform learning into practical innovation through collaboration and structured guidance. Under her direction, EuProximaX has evolved into a leading platform supporting patent registration, prototype development, research collaboration, and academic–industry partnerships, serving as a bridge between creativity and commercialization.\n\nDr. Chaudhari has conceptualized and launched pioneering programs such as Patent Writing Retreats, Research Focus Groups, and Innovation & Career Development Workshops, designed to cultivate a culture of intellectual property awareness and entrepreneurial thinking among educators, researchers, and young innovators.\n\nShe is widely recognized for her commitment to integrating educational excellence with innovation-driven growth. Her strategic mentorship promotes a mindset where knowledge creation, intellectual property protection, and societal contribution coexist as core values of progress.\n\nHer guiding principle—"Your Idea is Your Property™"—reflects EuProximaX\'s mission to empower every innovator to protect and elevate their intellectual contributions. Through her leadership, Dr. Chaudhari continues to inspire multidisciplinary collaboration, inclusivity in innovation, and the transformation of visionary concepts into tangible, real-world impact.',
         expertise: ['Strategic Planning', 'Innovation Management', 'IP Strategy', 'Leadership', 'Business Development', 'Educational Excellence', 'Research Collaboration', 'Academic-Industry Partnerships', 'Entrepreneurship', 'Mentorship'],
-        image: 'https://euproximax.com/uploads/partners/1762188894_1761163830_1761162813_WhatsApp%20Image%202025-10-21%20at%204.58.43%20AM.jpeg',
+        image: '/jyoti-chaudhari.jpg',
     },
     'prerana-chaudhari': {
         name: 'Prerana Chaudhari',
@@ -38,7 +38,7 @@ const partnersData: Record<string, {
         email: 'prerana@euproximax.com',
         bio: 'Prerana Chaudhari serves as the Project Manager & Coordinator at EuProximaX Innovation Services. She is responsible for managing project timelines, documentation, and communication across multiple innovation and client engagements. With a strong focus on organization and collaboration, she ensures seamless coordination between internal teams, clients, vendors, and external partners. Her role supports the successful execution of projects from concept to prototype, contributing to the company\'s mission of empowering innovators and startups.',
         expertise: ['Project Management', 'Regional Operations', 'Client Coordination', 'Timeline Management', 'Quality Assurance', 'Documentation', 'Vendor Management', 'Team Collaboration'],
-        image: 'https://euproximax.com/uploads/partners/1762188906_1761145881_1760668450_WhatsApp%20Image%202025-10-16%20at%2010.01.01%20PM%20(1).jpeg',
+        image: '/prerana-chaudhari.jpg',
     },
     'pravin-shinde': {
         name: 'Pravin Shinde',
@@ -47,7 +47,7 @@ const partnersData: Record<string, {
         email: 'pravin@euproximax.com',
         bio: 'Mr. Pravin Shinde brings over 10 years of experience in the pharmaceutical industry, research, and technology innovation. As Director of Innovation Services & Technical Expert at EuProximaX Innovation Services, he leads technical planning and execution for product development and prototyping initiatives. His expertise bridges research and practical implementation, supporting innovators and startups in developing viable, validated, and scalable solutions. He plays a key role in guiding teams through technology-driven innovation and transformation.',
         expertise: ['Innovation Services', 'Strategic Leadership', 'Cross-border Operations', 'Client Success', 'International Business', 'Pharmaceutical Industry', 'Research & Development', 'Technology Innovation', 'Product Development', 'Prototyping', 'Technical Planning'],
-        image: 'https://euproximax.com/uploads/partners/1762190145_Pravin.jpeg',
+        image: '/pravin-shinde.jpg',
     },
     'dr-sandeep-sonawane': {
         name: 'Dr. Sandeep Sonawane',
@@ -85,8 +85,7 @@ const partnersData: Record<string, {
         email: 'prakash.wankhedkar@euproximax.com',
         bio: 'Dr. Prakash Wankhedkar contributes academic and research expertise to support innovation and development projects. He brings rigorous research methodology and academic rigor to our innovation processes.',
         expertise: ['Academic Research', 'Research Methodology', 'Intellectual Property', 'Research Strategy', 'Academic Collaboration'],
-        // TODO: Add actual image URL from https://euproximax.com/uploads/partners/
-        image: 'https://euproximax.com/uploads/partners/dr-prakash-wankhedkar.jpeg',
+        image: '/prakash-wankhedkar.jpg',
     },
     'harshika-suryawanshi': {
         name: 'Harshika Suryawanshi',

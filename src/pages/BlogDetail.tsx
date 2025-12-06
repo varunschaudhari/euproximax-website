@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import { Calendar, Clock, User, ArrowLeft, ArrowRight, Tag } from 'lucide-react'
 import { fetchBlogBySlug, BlogPost } from '../services/blogService'
 import { ApiError } from '../utils/apiClient'
+import { handleImageError } from '../utils/imageErrorHandler'
 
 const formatDate = (value?: string) => {
     if (!value) return ''
@@ -120,13 +121,10 @@ export default function BlogDetail() {
                 <div className="overflow-hidden rounded-3xl bg-white shadow-2xl">
                     <div className="h-80 w-full overflow-hidden bg-gray-900">
                         <img
-                            src={blog.coverImage || '/MVP.jpg'}
+                            src={blog.coverImage || '/JPEG_Dark_BG.jpg'}
                             alt={blog.heroImageAlt || blog.title}
                             className="h-full w-full object-cover"
-                            onError={(e) => {
-                                const target = e.target as HTMLImageElement
-                                target.src = '/MVP.jpg'
-                            }}
+                            onError={handleImageError}
                         />
                     </div>
                     <div className="p-8 md:p-12">

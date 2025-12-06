@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { fetchPublicVideos, VideoRecord } from '../services/videoService'
 import { ApiError } from '../utils/apiClient'
 import { useToast } from '../context/ToastContext'
+import { handleImageError } from '../utils/imageErrorHandler'
 
 export default function VideoGallery() {
   const [searchQuery, setSearchQuery] = useState('')
@@ -104,13 +105,10 @@ export default function VideoGallery() {
           >
             <div className="relative h-64 md:h-80 rounded-3xl overflow-hidden shadow-2xl">
               <img
-                src="/JPEG_White_BG.jpg"
+                src="/JPEG_Dark_BG.jpg"
                 alt="Video Gallery"
                 className="w-full h-full object-cover"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement
-                  target.src = '/MVP.jpg'
-                }}
+                onError={handleImageError}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 via-transparent to-transparent"></div>
               <div className="absolute inset-0 flex items-center justify-center">
@@ -213,10 +211,7 @@ export default function VideoGallery() {
                         src={video.thumbnailUrl}
                         alt={video.heroImageAlt || video.title}
                         className="w-full h-full object-cover"
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement
-                          target.src = '/MVP.jpg'
-                        }}
+                        onError={handleImageError}
                         whileHover={{ scale: 1.1 }}
                         transition={{ duration: 0.5 }}
                       />

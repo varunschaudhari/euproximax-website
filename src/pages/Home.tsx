@@ -3,6 +3,7 @@ import { Navigation, Pagination, Autoplay } from 'swiper/modules'
 import { motion } from 'framer-motion'
 import { ArrowRight, TrendingUp, Users, Award, Star, Shield, Zap, Globe } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { handleImageError } from '../utils/imageErrorHandler'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
@@ -187,17 +188,11 @@ export default function Home() {
                   {/* Background Image */}
                   <div className="absolute inset-0">
                     <img
-                      src={slide.image || '/MVP.jpg'}
+                      src={slide.image || '/JPEG_Dark_BG.jpg'}
                       alt={slide.title}
                       className="w-full h-full object-cover"
                       loading="eager"
-                      onError={(e) => {
-                        // Fallback to default image if the specified image doesn't exist
-                        const target = e.target as HTMLImageElement
-                        if (target.src !== window.location.origin + '/MVP.jpg') {
-                          target.src = '/MVP.jpg'
-                        }
-                      }}
+                      onError={handleImageError}
                     />
                     {/* Gradient Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-br from-primary/90 via-primary/80 to-secondary/90"></div>

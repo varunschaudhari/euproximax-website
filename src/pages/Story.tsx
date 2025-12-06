@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { Lightbulb, Award, TrendingUp, Zap, FileText, Globe, ArrowRight, BookOpen } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { handleImageError } from '../utils/imageErrorHandler'
 
 export default function Story() {
   const stories = [
@@ -134,10 +135,7 @@ export default function Story() {
                       src={story.image}
                       alt={story.title}
                       className="w-full h-full object-cover"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement
-                        target.src = '/MVP.jpg'
-                      }}
+                      onError={handleImageError}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                   </div>

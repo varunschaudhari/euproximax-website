@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { Calendar, MapPin, CheckCircle, ArrowRight, Users, Award, TrendingUp, Sparkles, Search, Filter } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
+import { handleImageError } from '../utils/imageErrorHandler'
 
 export default function Events() {
   const [searchQuery, setSearchQuery] = useState('')
@@ -17,7 +18,7 @@ export default function Events() {
       description: 'Join us for a comprehensive summit on innovation and IP protection. Learn from industry experts and connect with fellow innovators from around the world.',
       outcomes: ['Networking opportunities', 'Expert insights', 'Case studies', 'Q&A sessions'],
       badge: 'Upcoming',
-      image: '/JPEG_White_BG.jpg',
+      image: '/JPEG_Dark_BG.jpg',
       type: 'Summit',
       time: '9:00 AM - 6:00 PM',
     },
@@ -109,13 +110,10 @@ export default function Events() {
           >
             <div className="relative h-64 md:h-80 rounded-3xl overflow-hidden shadow-2xl">
               <img
-                src="/MVP.jpg"
+                src="/JPEG_Dark_BG.jpg"
                 alt="Events"
                 className="w-full h-full object-cover"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement
-                  target.src = '/JPEG_White_BG.jpg'
-                }}
+                onError={handleImageError}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 via-transparent to-transparent"></div>
             </div>
@@ -202,10 +200,7 @@ export default function Events() {
                       src={event.image}
                       alt={event.title}
                       className="w-full h-full object-cover"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement
-                        target.src = '/MVP.jpg'
-                      }}
+                      onError={handleImageError}
                       whileHover={{ scale: 1.1 }}
                       transition={{ duration: 0.5 }}
                     />

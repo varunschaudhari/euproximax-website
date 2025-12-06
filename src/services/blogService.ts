@@ -73,10 +73,33 @@ export interface BlogSubmissionPayload {
   summary: string
   reference?: string
   category?: string
+  coverImage?: File
 }
 
 export const submitBlogProposal = (payload: BlogSubmissionPayload) => {
-  return post<{ submissionId: string; slug: string }>('/blog/submissions', payload, { skipAuth: true })
+  const formData = new FormData()
+  
+  formData.append('name', payload.name)
+  formData.append('email', payload.email)
+  formData.append('title', payload.title)
+  formData.append('summary', payload.summary)
+  
+  if (payload.reference) {
+    formData.append('reference', payload.reference)
+  }
+  
+  if (payload.category) {
+    formData.append('category', payload.category)
+  }
+  
+  if (payload.coverImage) {
+    formData.append('coverImage', payload.coverImage)
+  }
+  
+  return post<{ submissionId: string; slug: string }>('/blog/submissions', formData, { 
+    skipAuth: true,
+    isFormData: true 
+  })
 }
 
 

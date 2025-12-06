@@ -1,4 +1,4 @@
-import { useParams, Link, Navigate } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowLeft, MapPin, Mail, Phone } from 'lucide-react'
 import { useState, useEffect } from 'react'

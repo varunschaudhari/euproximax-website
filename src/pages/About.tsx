@@ -2,96 +2,45 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Target, Eye, Lightbulb, Cog, Cpu, Zap, FileText, Wrench, Shield, DollarSign, UserPlus, Search, Brain, Settings, FileCheck, TrendingUp, Users, ArrowUp, Menu, X, Globe } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { fetchPartners, Partner } from '../services/partnerService'
+import { ApiError } from '../utils/apiClient'
 
 export default function About() {
   const [activeSection, setActiveSection] = useState('overview')
   const [showBackToTop, setShowBackToTop] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({})
+  const [partners, setPartners] = useState<Partner[]>([])
+  const [partnersLoading, setPartnersLoading] = useState(true)
+  const [partnersError, setPartnersError] = useState<string | null>(null)
 
-  // Helper function to generate slug from name
-  const generateSlug = (name: string) => {
-    return name
+  // Helper function to generate slug from name (fallback if slug not available)
+  const generateSlug = (partner: Partner) => {
+    return partner.slug || partner.name
       .toLowerCase()
       .replace(/dr\.\s*/g, 'dr-')
       .replace(/\s+/g, '-')
       .replace(/[^\w-]/g, '')
   }
 
-  const partners = [
-    {
-      name: 'Tanaya Chaudhari',
-      location: 'INDIA',
-      role: 'Administrative Assistant – EuProximaX Innovation Services',
-      image: '/tanaya-chaudhari.jpg'
-    },
-    {
-      name: 'Dr. Jyoti Chaudhari',
-      location: 'INDIA',
-      role: 'Strategic Advisor & Founder – EuProximaX Innovation Services',
-      image: '/jyoti-chaudhari.jpg'
-    },
-    {
-      name: 'Prerana Chaudhari',
-      location: 'INDIA',
-      role: 'Project Manager (South Asia & India)– EuProximaX Innovation Services',
-      image: '/prerana-chaudhari.jpg'
-    },
-    {
-      name: 'Pravin Shinde',
-      location: 'USA & INDIA',
-      role: 'Director of Innovation Services – EuProximaX Innovation Services',
-      image: '/pravin-shinde.jpg'
-    },
-    {
-      name: 'Dr. Sandeep Sonawane',
-      location: 'INDIA',
-      role: 'Scientific & Academic Collaboration',
-      image: 'https://euproximax.com/uploads/partners/1762190168_Dr.%20Sandeep.jpg'
-    },
-    {
-      name: 'Umesh Patil',
-      location: 'INDIA',
-      role: 'Industrial Professional – External Associate',
-      image: undefined
-    },
-    {
-      name: 'Dhananjay Patil',
-      location: 'INDIA',
-      role: 'Industrial Professional – External Associate',
-      image: undefined
-    },
-    {
-      name: 'Dr. Prakash Wankhedkar',
-      location: 'INDIA',
-      role: 'Academic & Research Associate– External Associate EuProximaX Innovation Services',
-      image: '/prakash-wankhedkar.jpg'
-    },
-    {
-      name: 'Harshika Suryawanshi',
-      location: 'INDIA',
-      role: 'Digital Development & AI/ML Lead – External Associate',
-      image: 'https://euproximax.com/uploads/partners/1762188922_1761145947_1760848012_harshika%20mam.jpg'
-    },
-    {
-      name: 'Hemant Suryawanshi',
-      location: 'USA',
-      role: 'Business Development (USA, Europe, and Asia) & Innovation Lead- External Associate',
-      image: 'https://euproximax.com/uploads/partners/1762188938_1761151591_1647957911258.jpg'
-    },
-    {
-      name: 'Shubham Wagh',
-      location: 'USA',
-      role: 'Global Innovation (USA, UK, Canada & India) & Client Partnerships Lead – EuProximaX Innovation Services',
-      image: 'https://euproximax.com/uploads/partners/1762271221_Shubham.jpg'
-    },
-    {
-      name: 'Sandeep Narayan Patil',
-      location: 'UK',
-      role: 'Scientific Advisor – External Collaboration, EuProximaX Innovation Services',
-      image: undefined
-    },
-  ]
+  useEffect(() => {
+    const loadPartners = async () => {
+      setPartnersLoading(true)
+      setPartnersError(null)
+      try {
+        const response = await fetchPartners()
+        setPartners(response.data || [])
+      } catch (err) {
+        const apiErr = err as ApiError
+        const message = apiErr.message || 'Unable to load partners'
+        setPartnersError(message)
+        setPartners([])
+      } finally {
+        setPartnersLoading(false)
+      }
+    }
+    loadPartners()
+  }, [])
 
   const navSections = [
     { id: 'overview', label: 'Overview', icon: Target },
@@ -478,27 +427,37 @@ export default function About() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {partners.map((partner, index) => (
+          {partnersLoading && (
+            <div className="text-center py-12 text-gray-500">Loading partners...</div>
+          )}
+          {partnersError && (
+            <div className="text-center py-12 text-rose-500">{partnersError}</div>
+          )}
+          {!partnersLoading && !partnersError && partners.length === 0 && (
+            <div className="text-center py-12 text-gray-500">No partners found.</div>
+          )}
+          {!partnersLoading && !partnersError && partners.length > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {partners.map((partner, index) => (
               <motion.div
-                key={partner.name}
+                key={partner._id}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.03 }}
               >
                 <Link
-                  to={`/partner/${generateSlug(partner.name)}`}
+                  to={`/partner/${generateSlug(partner)}`}
                   className="block card p-6 group hover:shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer"
                 >
                   <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-primary-100 to-secondary-100 flex items-center justify-center overflow-hidden border-2 border-primary/20 group-hover:border-primary/40 transition-colors shadow-md">
-                    {partner.image && !imageErrors[partner.name] ? (
+                    {partner.image && !imageErrors[partner._id] ? (
                       <img
-                        src={partner.image}
+                        src={partner.image.startsWith('http') ? partner.image : `${import.meta.env.VITE_API_URL || ''}${partner.image}`}
                         alt={partner.name}
                         className="w-full h-full object-cover"
                         onError={() => {
-                          setImageErrors(prev => ({ ...prev, [partner.name]: true }))
+                          setImageErrors(prev => ({ ...prev, [partner._id]: true }))
                         }}
                       />
                     ) : (
@@ -515,8 +474,9 @@ export default function About() {
                   </p>
                 </Link>
               </motion.div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </section>
 
         {/* CTA Section */}

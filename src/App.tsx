@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom'
 import Layout from './components/Layout'
+import ScrollToTop from './components/ScrollToTop'
 import Home from './pages/Home'
 import About from './pages/About'
 import ServicesHub from './pages/ServicesHub'
@@ -36,6 +37,7 @@ function App() {
     <ThemeProvider>
       <ToastProvider>
         <Router>
+          <ScrollToTop />
           <Routes>
             {/* Routes with Layout (Header & Footer) */}
             <Route element={<LayoutWrapper />}>

@@ -37,6 +37,7 @@ const getHeaders = (isFormData: boolean = false): HeadersInit => {
  */
 export interface ApiRequestInit extends RequestInit {
   isFormData?: boolean
+  skipAuth?: boolean
 }
 
 /**

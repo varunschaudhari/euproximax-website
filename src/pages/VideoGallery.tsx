@@ -10,24 +10,21 @@ export default function VideoGallery() {
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [videos, setVideos] = useState<VideoRecord[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const [categories, setCategories] = useState<string[]>(['all'])
   const { showError } = useToast()
 
   useEffect(() => {
     const loadVideos = async () => {
       setLoading(true)
-      setError(null)
       try {
         const response = await fetchPublicVideos()
         const data = response.data || []
         setVideos(data)
-        const uniqueCategories = Array.from(new Set(data.map((video) => video.category).filter(Boolean)))
+        const uniqueCategories = Array.from(new Set(data.map((video) => video.category).filter((cat): cat is string => Boolean(cat))))
         setCategories(['all', ...uniqueCategories])
       } catch (err) {
         const apiErr = err as ApiError
         const message = apiErr.message || 'Unable to load videos'
-        setError(message)
         showError(message)
         setVideos([])
       } finally {

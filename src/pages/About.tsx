@@ -96,7 +96,7 @@ export default function About() {
       <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-sm">
         <div className="container-custom">
           <div className="flex items-center justify-between py-4">
-            <h2 className="text-xl font-bold text-text hidden md:block">About EuProximaX</h2>
+            <h2 className="text-xl font-bold text-text hidden md:block"></h2>
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-2">
@@ -159,77 +159,120 @@ export default function About() {
       </div>
 
       {/* Overview Hero Section */}
-      <section id="overview" className="relative py-20 bg-gradient-to-br from-primary/10 via-bg to-secondary/10 overflow-hidden scroll-mt-24">
+      <section id="overview" className="relative py-16 md:py-24 bg-gradient-to-br from-primary/5 via-bg to-secondary/5 overflow-hidden scroll-mt-24">
+        {/* Animated Background Elements */}
         <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-        <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-secondary/5 rounded-full blur-3xl"></div>
+        <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-secondary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl"></div>
 
         <div className="container-custom relative z-10">
+          {/* Header Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-center max-w-4xl mx-auto mb-12"
+            className="text-center max-w-5xl mx-auto mb-16"
           >
-            <div className="inline-flex items-center justify-center p-3 bg-primary/10 rounded-2xl mb-6">
-              <Target className="text-primary mr-2" size={24} />
-              <span className="text-primary font-semibold text-sm">Who We Are</span>
-            </div>
-            <h1 className="text-5xl md:text-6xl font-bold text-text mb-6">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+              className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-full mb-6 border border-primary/30"
+            >
+              <Target className="text-primary" size={20} />
+              <span className="text-primary font-semibold text-sm tracking-wide">Who We Are</span>
+            </motion.div>
+            
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-text mb-6 leading-tight">
               About
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary-600 to-secondary mt-2">
                 EuProximaX
               </span>
             </h1>
-            <p className="text-xl md:text-2xl text-gray-700 leading-relaxed mb-6">
+            
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.6 }}
+              className="text-xl md:text-2xl lg:text-3xl text-gray-800 leading-relaxed mb-6 font-medium"
+            >
               A global IP & innovation platform based in India, dedicated to helping
               innovators protect and commercialize their ideas.
-            </p>
-            <p className="text-lg text-gray-600 leading-relaxed max-w-3xl mx-auto">
+            </motion.p>
+            
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.6 }}
+              className="text-lg md:text-xl text-gray-600 leading-relaxed max-w-4xl mx-auto"
+            >
               We provide comprehensive services in patents, industrial design, prototyping, and manufacturing support to transform your innovative concepts into protected, market-ready products.
-            </p>
+            </motion.p>
           </motion.div>
 
-          {/* Hero Image */}
-          {/* <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.3, duration: 0.6 }}
-            className="max-w-5xl mx-auto"
-          >
-            <div className="relative h-64 md:h-80 rounded-3xl overflow-hidden shadow-2xl">
-              <img
-                src="/JPEG_Dark_BG.jpg"
-                alt="EuProximaX"
-                className="w-full h-full object-cover"
-                onError={handleImageError}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 via-transparent to-transparent"></div>
-            </div>
-          </motion.div> */}
-
-          {/* Key Highlights */}
+          {/* Statistics Section */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.6 }}
-            className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto"
+            transition={{ delay: 0.6, duration: 0.6 }}
+            className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 max-w-5xl mx-auto mb-16"
+          >
+            {[
+              { value: '500+', label: 'Innovations Supported', icon: Lightbulb },
+              { value: '12+', label: 'Global Partners', icon: Users },
+              { value: '100+', label: 'Patents Filed', icon: FileText },
+              { value: '50+', label: 'Prototypes Delivered', icon: Cog },
+            ].map((stat, index) => {
+              const Icon = stat.icon
+              return (
+                <motion.div
+                  key={stat.label}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.7 + index * 0.1, duration: 0.5 }}
+                  className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 text-center shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-primary/30 group"
+                >
+                  <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary-600 text-white rounded-xl flex items-center justify-center mx-auto mb-3 shadow-md group-hover:scale-110 transition-transform">
+                    <Icon size={24} />
+                  </div>
+                  <div className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary mb-2">
+                    {stat.value}
+                  </div>
+                  <p className="text-xs md:text-sm text-gray-600 font-medium">{stat.label}</p>
+                </motion.div>
+              )
+            })}
+          </motion.div>
+
+          {/* Key Highlights - Enhanced Design */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8, duration: 0.6 }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto"
           >
             {[
               {
                 icon: Shield,
                 title: 'IP Protection',
-                description: 'Comprehensive patent and design protection services',
+                description: 'Comprehensive patent and design protection services to safeguard your intellectual property',
+                gradient: 'from-blue-500 to-blue-600',
+                bgGradient: 'from-blue-50 to-blue-100/50',
               },
               {
                 icon: Zap,
                 title: 'Innovation Support',
-                description: 'From concept to prototype and market launch',
+                description: 'End-to-end support from concept to prototype and market launch with expert guidance',
+                gradient: 'from-yellow-500 to-orange-500',
+                bgGradient: 'from-yellow-50 to-orange-100/50',
               },
               {
                 icon: Globe,
                 title: 'Global Reach',
-                description: 'Serving innovators worldwide from our base in India',
+                description: 'Serving innovators worldwide from our base in India with international expertise',
+                gradient: 'from-green-500 to-emerald-600',
+                bgGradient: 'from-green-50 to-emerald-100/50',
               },
             ].map((highlight, index) => {
               const Icon = highlight.icon
@@ -238,17 +281,59 @@ export default function About() {
                   key={highlight.title}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.6 + index * 0.1 }}
-                  className="bg-surface rounded-2xl p-6 text-center shadow-lg hover:shadow-xl transition-all border border-gray-100"
+                  transition={{ delay: 0.9 + index * 0.1, duration: 0.5 }}
+                  whileHover={{ y: -5, scale: 1.02 }}
+                  className="relative group"
                 >
-                  <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary-700 text-white rounded-xl flex items-center justify-center mx-auto mb-4 shadow-md">
-                    <Icon size={28} />
+                  <div className={`bg-gradient-to-br ${highlight.bgGradient} rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 border border-white/50 backdrop-blur-sm h-full`}>
+                    <div className={`w-20 h-20 bg-gradient-to-br ${highlight.gradient} text-white rounded-2xl flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
+                      <Icon size={32} />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-primary transition-colors">
+                      {highlight.title}
+                    </h3>
+                    <p className="text-gray-700 leading-relaxed text-sm md:text-base">
+                      {highlight.description}
+                    </p>
+                    <div className="mt-6 flex items-center text-primary font-semibold text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                      <span>Learn more</span>
+                      <ArrowUp className="ml-2 rotate-45" size={16} />
+                    </div>
                   </div>
-                  <h3 className="text-lg font-bold text-text mb-2">{highlight.title}</h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">{highlight.description}</p>
                 </motion.div>
               )
             })}
+          </motion.div>
+
+          {/* Value Proposition Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.2, duration: 0.6 }}
+            className="mt-16 max-w-4xl mx-auto"
+          >
+            <div className="bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10 rounded-3xl p-8 md:p-12 border border-primary/20 backdrop-blur-sm">
+              <div className="text-center mb-6">
+                <h2 className="text-2xl md:text-3xl font-bold text-text mb-4">
+                  Your Idea is Your Property™
+                </h2>
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  At EuProximaX, we believe every innovation deserves protection and the opportunity to make an impact. 
+                  Our mission is to bridge the gap between creative ideas and commercial success, providing the expertise, 
+                  resources, and support needed to transform your vision into reality.
+                </p>
+              </div>
+              <div className="flex flex-wrap justify-center gap-4 mt-8">
+                {['Expert Guidance', 'Global Network', 'End-to-End Support', 'Proven Track Record'].map((tag) => (
+                  <span
+                    key={tag}
+                    className="px-4 py-2 bg-white/80 rounded-full text-sm font-semibold text-primary border border-primary/20 shadow-sm"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
           </motion.div>
         </div>
       </section>

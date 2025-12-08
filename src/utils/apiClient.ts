@@ -103,10 +103,16 @@ export const apiClient = async <T>(
     // Handle other fetch errors
     if (error instanceof Error) {
       // Check for common error messages
-      if (error.message.includes('load failed') || error.message.includes('Failed to fetch')) {
+      if (error.message.includes('load failed') || 
+          error.message.includes('load error') ||
+          error.message.includes('Failed to fetch') ||
+          error.message.includes('NetworkError')) {
+        const isFormDataRequest = isFormData || options.body instanceof FormData
         throw {
           success: false,
-          message: 'Failed to upload file. Please check your connection and try again.',
+          message: isFormDataRequest 
+            ? 'File upload failed. Please check your connection and try again. If the file is large, it may take longer to upload.'
+            : 'Network error. Please check your connection and try again.',
           status: 0,
         } as ApiError
       }

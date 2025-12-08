@@ -79,8 +79,19 @@ export default function Contact() {
       }
       
       // Handle network errors specifically
-      if (error?.status === 0 || error?.message?.includes('Failed to fetch') || error?.message?.includes('Network error')) {
-        errorMessage = 'Network error. Please check your connection and try again.'
+      if (error?.status === 0 || 
+          error?.message?.includes('Failed to fetch') || 
+          error?.message?.includes('Network error') ||
+          error?.message?.includes('load failed') ||
+          error?.message?.includes('load error')) {
+        errorMessage = selectedFile 
+          ? 'File upload failed. Please check your connection and try again. If the file is large, it may take longer to upload.'
+          : 'Network error. Please check your connection and try again.'
+      }
+      
+      // Handle timeout errors
+      if (error?.message?.includes('timeout') || error?.name === 'TimeoutError') {
+        errorMessage = 'Upload timed out. Please try again with a smaller file or check your connection.'
       }
       
       showError(errorMessage)

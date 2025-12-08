@@ -48,6 +48,16 @@ export default function Contact() {
     e.preventDefault()
     setIsSubmitting(true)
     try {
+      // Validate file if present
+      if (selectedFile) {
+        const maxSize = 10 * 1024 * 1024 // 10MB in bytes
+        if (selectedFile.size > maxSize) {
+          showError('File size exceeds 10MB limit. Please choose a smaller file.')
+          setIsSubmitting(false)
+          return
+        }
+      }
+
       // Transform subject value to display text before submitting
       const submitData = {
         ...formData,
@@ -60,9 +70,19 @@ export default function Contact() {
       setSelectedFile(null)
     } catch (error: any) {
       // Check if there are validation errors and use the first error message
-      const errorMessage = error?.errors && error.errors.length > 0 
-        ? error.errors[0].msg || error.errors[0].message
-        : error?.message || 'Unable to submit your enquiry right now.'
+      let errorMessage = 'Unable to submit your enquiry right now.'
+      
+      if (error?.errors && error.errors.length > 0) {
+        errorMessage = error.errors[0].msg || error.errors[0].message || errorMessage
+      } else if (error?.message) {
+        errorMessage = error.message
+      }
+      
+      // Handle network errors specifically
+      if (error?.status === 0 || error?.message?.includes('Failed to fetch') || error?.message?.includes('Network error')) {
+        errorMessage = 'Network error. Please check your connection and try again.'
+      }
+      
       showError(errorMessage)
     } finally {
       setIsSubmitting(false)
@@ -295,7 +315,21 @@ export default function Contact() {
                         type="file"
                         id="file"
                         name="file"
-                        onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+                        onChange={(e) => {
+                          const file = e.target.files?.[0] || null
+                          if (file) {
+                            const maxSize = 10 * 1024 * 1024 // 10MB
+                            if (file.size > maxSize) {
+                              showError('File size exceeds 10MB limit. Please choose a smaller file.')
+                              e.target.value = '' // Clear the input
+                              setSelectedFile(null)
+                              return
+                            }
+                            setSelectedFile(file)
+                          } else {
+                            setSelectedFile(null)
+                          }
+                        }}
                         className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all bg-white text-sm file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 cursor-pointer"
                         accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.jpg,.jpeg,.png,.gif,.webp,.zip,.rar,.7z"
                       />

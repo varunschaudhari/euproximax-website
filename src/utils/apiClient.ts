@@ -62,13 +62,21 @@ export const apiClient = async <T>(
   try {
     const response = await fetch(url, config)
 
-    // Handle non-JSON responses
-    const contentType = response.headers.get('content-type')
-    if (!contentType?.includes('application/json')) {
-      throw new Error('Invalid response format')
-    }
+    // Read response as text first to handle both JSON and non-JSON responses
+    const text = await response.text()
+    let data: any
 
-    const data = await response.json()
+    // Try to parse as JSON
+    try {
+      data = text ? JSON.parse(text) : {}
+    } catch (parseError) {
+      // If parsing fails, it's not valid JSON
+      throw {
+        success: false,
+        message: text || 'Invalid response format from server',
+        status: response.status,
+      } as ApiError
+    }
 
     // Handle error responses
     if (!response.ok || !data.success) {
@@ -87,9 +95,21 @@ export const apiClient = async <T>(
     if (error instanceof TypeError && error.message === 'Failed to fetch') {
       throw {
         success: false,
-        message: 'Network error. Please check your connection.',
+        message: 'Network error. Please check your connection and try again.',
         status: 0,
       } as ApiError
+    }
+
+    // Handle other fetch errors
+    if (error instanceof Error) {
+      // Check for common error messages
+      if (error.message.includes('load failed') || error.message.includes('Failed to fetch')) {
+        throw {
+          success: false,
+          message: 'Failed to upload file. Please check your connection and try again.',
+          status: 0,
+        } as ApiError
+      }
     }
 
     // Re-throw API errors

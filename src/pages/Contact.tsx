@@ -54,13 +54,16 @@ export default function Contact() {
         subject: subjectMap[formData.subject] || formData.subject,
         file: selectedFile || undefined
       }
-      await submitContact(submitData)
-      showSuccess('Thank you! We have received your enquiry.')
+      const response = await submitContact(submitData)
+      showSuccess(response.message || 'Thank you! We have received your enquiry.')
       setFormData({ name: '', email: '', phone: '', subject: '', message: '' })
       setSelectedFile(null)
     } catch (error: any) {
-      const message = error?.message || 'Unable to submit your enquiry right now.'
-      showError(message)
+      // Check if there are validation errors and use the first error message
+      const errorMessage = error?.errors && error.errors.length > 0 
+        ? error.errors[0].msg || error.errors[0].message
+        : error?.message || 'Unable to submit your enquiry right now.'
+      showError(errorMessage)
     } finally {
       setIsSubmitting(false)
     }

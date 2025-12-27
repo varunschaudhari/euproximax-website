@@ -20,6 +20,7 @@ import Contact from './pages/Contact'
 import Terms from './pages/Terms'
 import Privacy from './pages/Privacy'
 import PartnerDetail from './pages/PartnerDetail'
+import Chat from './pages/Chat'
 import { ThemeProvider } from './context/ThemeContext'
 import { ToastProvider } from './context/ToastContext'
 
@@ -60,6 +61,7 @@ function App() {
               <Route path="/terms" element={<Terms />} />
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/partner/:slug" element={<PartnerDetail />} />
+              <Route path="/chat" element={<Chat />} />
             </Route>
           </Routes>
         </Router>

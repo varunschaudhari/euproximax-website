@@ -1,6 +1,6 @@
 import ReactMarkdown from 'react-markdown'
 import { Message } from './types'
-import { Paperclip, Download } from 'lucide-react'
+import { Paperclip, Download, Sparkles } from 'lucide-react'
 
 interface MessageBubbleProps {
   message: Message
@@ -23,11 +23,11 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
         {/* Bot Message */}
         {!isUser && (
           <div className="flex items-start gap-3">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center flex-shrink-0 shadow-md">
-              <span className="text-white text-xs font-bold">NX</span>
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center flex-shrink-0 shadow-lg border border-white/20">
+              <Sparkles className="w-4 h-4 text-white" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold text-gray-600 dark:text-slate-400 mb-2">Nexa AI</p>
+              <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-2">Nexa AI</p>
               <div className="prose prose-sm max-w-none dark:prose-invert">
                 <ReactMarkdown
                   className="text-sm leading-relaxed text-gray-800 dark:text-slate-200"

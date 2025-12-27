@@ -6,6 +6,7 @@ import UserInfoForm from './UserInfoForm'
 import { Message } from './types'
 import { createOrGetConversation, sendMessage, getConversation, ChatMessage } from '../../services/chatbotService'
 import { ApiError } from '../../utils/apiClient'
+import { MessageCircle, Maximize2, Minimize2, X, Sparkles } from 'lucide-react'
 
 // Generate a unique session ID
 const generateSessionId = () => {
@@ -23,6 +24,7 @@ const ChatWindow: React.FC = () => {
   const [userInfo, setUserInfo] = useState<{ name?: string; email?: string; mobile?: string } | null>(null)
   const [showUserForm, setShowUserForm] = useState(false)
   const sessionInitialized = useRef(false)
+  const [notificationCount, setNotificationCount] = useState(0)
 
   // Initialize session and load conversation
   useEffect(() => {
@@ -193,6 +195,11 @@ const ChatWindow: React.FC = () => {
       if (response.data.noveltyAnalysis) {
         setNoveltyAnalysis(response.data.noveltyAnalysis)
       }
+
+      // Reset notification count when chat is opened
+      if (isOpen) {
+        setNotificationCount(0)
+      }
     } catch (error) {
       const apiError = error as ApiError
       // Remove user message on error
@@ -212,11 +219,21 @@ const ChatWindow: React.FC = () => {
   }
 
   const toggleChat = () => {
-    setIsOpen(!isOpen)
-    setIsMinimized(false)
+    if (isMinimized) {
+      // If minimized, maximize it
+      setIsMinimized(false)
+    } else {
+      // Otherwise, toggle open/close
+      setIsOpen(!isOpen)
+      setIsMinimized(false)
+      if (!isOpen) {
+        setNotificationCount(0)
+      }
+    }
   }
 
-  const minimizeChat = () => {
+  const minimizeChat = (e: React.MouseEvent) => {
+    e.stopPropagation() // Prevent triggering the toggleChat when clicking minimize button
     setIsMinimized(true)
   }
 
@@ -226,123 +243,85 @@ const ChatWindow: React.FC = () => {
       {!isOpen && (
         <button
           onClick={toggleChat}
-          className="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-br from-blue-600 to-blue-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 flex items-center justify-center z-[9999]"
+          className="fixed bottom-6 right-6 w-16 h-16 bg-gradient-to-br from-blue-600 via-blue-500 to-indigo-600 text-white rounded-full shadow-2xl hover:shadow-blue-500/50 transition-all duration-300 hover:scale-110 active:scale-95 flex items-center justify-center z-[9999] group"
           aria-label="Open chat"
-          style={{ 
-            zIndex: 9999,
-            position: 'fixed',
-            bottom: '24px',
-            right: '24px',
-            width: '56px',
-            height: '56px',
-            backgroundColor: '#2563eb',
-            borderRadius: '50%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-            cursor: 'pointer',
-            border: 'none',
-            outline: 'none'
-          }}
         >
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-            />
-          </svg>
+          {/* Pulse animation ring */}
+          <span className="absolute inset-0 rounded-full bg-blue-500 animate-ping opacity-75 group-hover:opacity-100"></span>
+          
+          {/* Main button content */}
+          <div className="relative z-10 flex items-center justify-center">
+            <MessageCircle className="w-7 h-7" strokeWidth={2} />
+          </div>
+
+          {/* Notification badge */}
+          {notificationCount > 0 && (
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center shadow-lg animate-pulse">
+              {notificationCount > 9 ? '9+' : notificationCount}
+            </span>
+          )}
+
+          {/* Glow effect */}
+          <span className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-300"></span>
         </button>
       )}
 
       {/* Chat Window */}
       {isOpen && (
         <div
-          className={`fixed bottom-6 right-6 w-[400px] max-w-[calc(100vw-3rem)] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col z-[9999] transition-all duration-300 ${
-            isMinimized ? 'h-16' : 'h-[600px] max-h-[calc(100vh-3rem)]'
+          onClick={isMinimized ? toggleChat : undefined}
+          className={`fixed bottom-6 right-6 w-[420px] max-w-[calc(100vw-3rem)] bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-gray-200/50 dark:border-slate-700/50 backdrop-blur-xl flex flex-col z-[9999] transition-all duration-300 overflow-hidden ${
+            isMinimized ? 'h-16 cursor-pointer hover:shadow-blue-500/20' : 'h-[650px] max-h-[calc(100vh-3rem)]'
           }`}
-          style={{ zIndex: 9999 }}
+          style={{
+            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(255, 255, 255, 0.05)'
+          }}
         >
           {/* Header */}
-          <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-5 py-4 rounded-t-2xl flex items-center justify-between flex-shrink-0">
+          <div className="bg-gradient-to-br from-blue-600 via-blue-500 to-indigo-600 text-white px-5 py-4 rounded-t-2xl flex items-center justify-between flex-shrink-0 shadow-lg">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
-                <span className="text-white text-sm font-bold">NX</span>
+              <div className="relative">
+                <div className="w-11 h-11 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg border border-white/30">
+                  <Sparkles className="w-5 h-5 text-white" />
+                </div>
+                {/* Online indicator */}
+                <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-400 rounded-full border-2 border-white dark:border-slate-900 shadow-sm"></div>
               </div>
               <div>
-                <h3 className="font-semibold text-lg">Nexa</h3>
-                <p className="text-xs text-blue-100">Patent Novelty Assistant</p>
+                <h3 className="font-bold text-lg tracking-tight">Nexa AI</h3>
+                {!isMinimized && (
+                  <p className="text-xs text-blue-100/90 font-medium">Patent Novelty Assistant</p>
+                )}
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
               {!isMinimized && (
                 <>
                   <button
                     onClick={() => navigate('/chat')}
-                    className="w-8 h-8 rounded-lg hover:bg-white/20 transition-colors flex items-center justify-center"
+                    className="w-9 h-9 rounded-lg hover:bg-white/20 transition-all duration-200 flex items-center justify-center group"
                     aria-label="Open in new page"
-                    title="Open in new page"
+                    title="Open in full page"
                   >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                      />
-                    </svg>
+                    <Maximize2 className="w-4 h-4 group-hover:scale-110 transition-transform" />
                   </button>
                   <button
                     onClick={minimizeChat}
-                    className="w-8 h-8 rounded-lg hover:bg-white/20 transition-colors flex items-center justify-center"
+                    className="w-9 h-9 rounded-lg hover:bg-white/20 transition-all duration-200 flex items-center justify-center group"
                     aria-label="Minimize"
+                    title="Minimize"
                   >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M20 12H4"
-                      />
-                    </svg>
+                    <Minimize2 className="w-4 h-4 group-hover:scale-110 transition-transform" />
                   </button>
                 </>
               )}
               <button
                 onClick={toggleChat}
-                className="w-8 h-8 rounded-lg hover:bg-white/20 transition-colors flex items-center justify-center"
+                className="w-9 h-9 rounded-lg hover:bg-white/20 transition-all duration-200 flex items-center justify-center group"
                 aria-label="Close"
+                title="Close"
               >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
+                <X className="w-4 h-4 group-hover:scale-110 transition-transform" />
               </button>
             </div>
           </div>
@@ -382,4 +361,3 @@ const ChatWindow: React.FC = () => {
 }
 
 export default ChatWindow
-

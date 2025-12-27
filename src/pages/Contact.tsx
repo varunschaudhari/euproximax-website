@@ -89,6 +89,13 @@ export default function Contact() {
           : 'Network error. Please check your connection and try again.'
       }
       
+      // Handle server errors (5xx)
+      if (error?.status && error.status >= 500) {
+        errorMessage = selectedFile
+          ? 'Server error while uploading the file. Please try again later or send without attachment.'
+          : 'Server error. Please try again later.'
+      }
+      
       // Handle timeout errors
       if (error?.message?.includes('timeout') || error?.name === 'TimeoutError') {
         errorMessage = 'Upload timed out. Please try again with a smaller file or check your connection.'

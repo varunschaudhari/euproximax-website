@@ -34,7 +34,7 @@ export default function Footer() {
   const socialLinks = [
     { icon: Facebook, href: '#', label: 'Facebook' },
     { icon: Twitter, href: '#', label: 'Twitter' },
-    { icon: Linkedin, href: '#', label: 'LinkedIn' },
+    { icon: Linkedin, href: 'https://www.linkedin.com/company/euproximax/', label: 'LinkedIn' },
     { icon: Instagram, href: '#', label: 'Instagram' },
   ]
 

@@ -266,10 +266,10 @@ export default function Chat() {
             {/* User Info Form */}
             {showUserForm && (
               <div className="flex-1 overflow-y-auto">
-                <UserInfoForm
-                  onSubmit={handleUserInfoSubmit}
-                  initialData={userInfo || undefined}
-                />
+              <UserInfoForm
+                onSubmit={handleUserInfoSubmit}
+                initialData={userInfo || undefined}
+              />
               </div>
             )}
 
@@ -305,8 +305,8 @@ export default function Chat() {
                 </div>
                 <div className="flex-1">
                   <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-slate-100 mb-3 tracking-tight">
-                    How to Discuss Your Invention Effectively
-                  </h3>
+              How to Discuss Your Invention Effectively
+            </h3>
                   <div className="grid sm:grid-cols-2 gap-3">
                     {[
                       'Describe your invention clearly and in detail',
@@ -323,7 +323,7 @@ export default function Chat() {
                         <span className="text-sm text-gray-700 dark:text-slate-300 leading-relaxed">{tip}</span>
                       </div>
                     ))}
-                  </div>
+          </div>
                 </div>
               </div>
             </div>

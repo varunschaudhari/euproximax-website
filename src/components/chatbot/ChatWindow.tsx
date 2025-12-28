@@ -224,8 +224,8 @@ const ChatWindow: React.FC = () => {
       setIsMinimized(false)
     } else {
       // Otherwise, toggle open/close
-      setIsOpen(!isOpen)
-      setIsMinimized(false)
+    setIsOpen(!isOpen)
+    setIsMinimized(false)
       if (!isOpen) {
         setNotificationCount(0)
       }

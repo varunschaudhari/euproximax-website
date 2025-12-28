@@ -325,13 +325,25 @@ export default function ConsultationBooking() {
   }
 
   const getSlotsForDate = (date: Date) => {
-    const dateStr = date.toISOString().split('T')[0]
+    // Normalize the selected date to UTC midnight to match backend storage format
+    // This ensures proper comparison regardless of user's timezone
+    const normalizedDate = new Date(Date.UTC(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      0, 0, 0, 0
+    ))
+    const dateStr = normalizedDate.toISOString().split('T')[0]
+    
     return slots.filter(slot => {
       // Normalize slot date for comparison (handle both ISO string and date-only string)
       let slotDateStr: string
       if (typeof slot.date === 'string') {
+        // Extract date part (YYYY-MM-DD) from ISO string
         slotDateStr = slot.date.split('T')[0]
       } else {
+        // Convert Date object to date string
+        // Backend stores dates as UTC midnight, so use UTC date string
         slotDateStr = new Date(slot.date).toISOString().split('T')[0]
       }
       return slotDateStr === dateStr
@@ -773,9 +785,12 @@ export default function ConsultationBooking() {
                                   <button
                                     key={slot._id}
                                     onClick={() => handleSlotSelect(slot)}
-                                    className="w-full px-3 py-2 text-sm border border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors font-medium"
+                                    className="w-full px-4 py-3 text-sm bg-white dark:bg-slate-800 border-2 border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-300 rounded-xl hover:bg-gradient-to-br hover:from-blue-50 hover:to-indigo-50 dark:hover:from-blue-900/30 dark:hover:to-indigo-900/30 hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md transition-all duration-200 font-semibold transform hover:scale-105"
                                   >
-                                    {formatTime24(slot.startTime)}
+                                    <div className="flex items-center justify-center gap-1.5">
+                                      <Clock className="w-3.5 h-3.5" />
+                                      <span>{formatTime24(slot.startTime)}</span>
+                                    </div>
                                   </button>
                                 ))
                               )}
@@ -803,15 +818,25 @@ export default function ConsultationBooking() {
                               <p>No available slots for this date.</p>
                             </div>
                           ) : (
-                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                               {dateSlots.map((slot) => (
                                 <button
                                   key={slot._id}
                                   onClick={() => handleSlotSelect(slot)}
-                                  className="px-4 py-3 text-sm border-2 border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:border-blue-400 dark:hover:border-blue-600 transition-all font-medium"
+                                  className="group relative px-5 py-4 bg-white dark:bg-slate-800 border-2 border-blue-200 dark:border-blue-700 rounded-2xl hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-lg hover:shadow-blue-500/20 dark:hover:shadow-blue-500/10 transition-all duration-300 transform hover:-translate-y-1"
                                 >
-                                  <div className="font-semibold">{formatTime(slot.startTime)}</div>
-                                  <div className="text-xs text-gray-500 dark:text-slate-400 mt-1">- {formatTime(slot.endTime)}</div>
+                                  <div className="flex flex-col items-center text-center space-y-1.5">
+                                    <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 group-hover:bg-blue-200 dark:group-hover:bg-blue-800/50 transition-colors">
+                                      <Clock className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                                    </div>
+                                    <div className="font-bold text-base text-blue-700 dark:text-blue-300 group-hover:text-blue-800 dark:group-hover:text-blue-200">
+                                      {formatTime(slot.startTime)}
+                                    </div>
+                                    <div className="text-xs font-medium text-gray-500 dark:text-slate-400">
+                                      {formatTime(slot.endTime)}
+                                    </div>
+                                  </div>
+                                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/0 to-indigo-500/0 group-hover:from-blue-500/5 group-hover:to-indigo-500/5 transition-opacity opacity-0 group-hover:opacity-100 pointer-events-none"></div>
                                 </button>
                               ))}
                             </div>
@@ -839,15 +864,22 @@ export default function ConsultationBooking() {
                                       {date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
                                     </h4>
                                   </div>
-                                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                                     {slots.map((slot) => (
                                       <button
                                         key={slot._id}
                                         onClick={() => handleSlotSelect(slot)}
-                                        className="px-4 py-3 text-sm border-2 border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:border-blue-400 dark:hover:border-blue-600 transition-all font-medium"
+                                        className="group relative px-5 py-4 bg-white dark:bg-slate-800 border-2 border-blue-200 dark:border-blue-700 rounded-2xl hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-lg hover:shadow-blue-500/20 dark:hover:shadow-blue-500/10 transition-all duration-300 transform hover:-translate-y-1"
                                       >
-                                        <div className="font-semibold">{formatTime(slot.startTime)}</div>
-                                        <div className="text-xs text-gray-500 dark:text-slate-400 mt-1">- {formatTime(slot.endTime)}</div>
+                                        <div className="flex flex-col items-center text-center space-y-1.5">
+                                          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 group-hover:bg-blue-200 dark:group-hover:bg-blue-800/50 transition-colors">
+                                            <Clock className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                                          </div>
+                                          <div className="font-bold text-base text-blue-700 dark:text-blue-300 group-hover:text-blue-800 dark:group-hover:text-blue-200">
+                                            {formatTime(slot.startTime)}
+                                          </div>
+                                        </div>
+                                        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/0 to-indigo-500/0 group-hover:from-blue-500/5 group-hover:to-indigo-500/5 transition-opacity opacity-0 group-hover:opacity-100 pointer-events-none"></div>
                                       </button>
                                     ))}
                                   </div>

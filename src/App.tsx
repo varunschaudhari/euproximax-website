@@ -21,6 +21,8 @@ import Terms from './pages/Terms'
 import Privacy from './pages/Privacy'
 import PartnerDetail from './pages/PartnerDetail'
 import Chat from './pages/Chat'
+import ConsultationBooking from './pages/ConsultationBooking'
+import ConsultationConfirmation from './pages/ConsultationConfirmation'
 import { ThemeProvider } from './context/ThemeContext'
 import { ToastProvider } from './context/ToastContext'
 
@@ -62,6 +64,8 @@ function App() {
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/partner/:slug" element={<PartnerDetail />} />
               <Route path="/chat" element={<Chat />} />
+              <Route path="/consultation" element={<ConsultationBooking />} />
+              <Route path="/consultation/confirmation/:bookingId" element={<ConsultationConfirmation />} />
             </Route>
           </Routes>
         </Router>

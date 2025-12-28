@@ -8,6 +8,7 @@ export default function Footer() {
     { to: '/about', label: 'About Us' },
     { to: '/services', label: 'Services' },
     { to: '/story', label: 'Story' },
+    { to: '/consultation', label: 'Book Consultation' },
     { to: '/contact', label: 'Contact' },
   ]
 

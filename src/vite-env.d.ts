@@ -8,3 +8,10 @@ interface ImportMeta {
   readonly env: ImportMetaEnv
 }
 
+
+interface Window {
+  __APP_CONFIG__?: {
+    VITE_API_BASE_URL?: string
+  }
+}
+

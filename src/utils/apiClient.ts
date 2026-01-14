@@ -3,7 +3,16 @@
  * Public API client for website (no authentication required)
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api/v1'
+const getRuntimeApiBaseUrl = () => {
+  if (typeof window !== 'undefined') {
+    const runtimeBase = window.__APP_CONFIG__?.VITE_API_BASE_URL
+    if (runtimeBase) return runtimeBase
+  }
+  return import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api/v1'
+}
+
+export const getApiBaseUrl = () => getRuntimeApiBaseUrl()
+export const getApiHost = () => getRuntimeApiBaseUrl().replace(/\/api\/v1$/, '')
 
 export interface ApiError {
   success: false
@@ -47,7 +56,7 @@ export const apiClient = async <T>(
   endpoint: string,
   options: ApiRequestInit = {}
 ): Promise<ApiResponse<T>> => {
-  const url = `${API_BASE_URL}${endpoint}`
+  const url = `${getApiBaseUrl()}${endpoint}`
 
   const { isFormData, ...requestOptions } = options
 

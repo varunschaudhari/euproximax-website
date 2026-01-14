@@ -3,6 +3,7 @@ import { Calendar, MapPin, CheckCircle, Image as ImageIcon, ArrowRight, External
 import { Link } from 'react-router-dom'
 import { useState, useEffect, useMemo } from 'react'
 import { fetchPublicEvents, EventRecord } from '../services/eventService'
+import { getApiHost } from '../utils/apiClient'
 import { ApiError } from '../utils/apiClient'
 import { handleImageError } from '../utils/imageErrorHandler'
 
@@ -42,18 +43,7 @@ export default function EventGallery() {
 
   const galleryImages = useMemo(() => {
     const images: Array<{ src: string; alt: string; title: string; category: string }> = []
-    const apiBase = (() => {
-      const envBase = import.meta.env.VITE_API_BASE_URL?.replace('/api/v1', '')
-      if (envBase) return envBase
-      if (typeof window !== 'undefined') {
-        const hostname = window.location.hostname
-        if (hostname.startsWith('www.')) {
-          return `https://api.${hostname.replace('www.', '')}`
-        }
-        return `https://api.${hostname}`
-      }
-      return 'http://localhost:3000'
-    })()
+    const apiBase = getApiHost()
     
     events.forEach((event) => {
       // Only include images from Published events

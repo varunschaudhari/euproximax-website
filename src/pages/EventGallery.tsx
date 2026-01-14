@@ -42,15 +42,43 @@ export default function EventGallery() {
 
   const galleryImages = useMemo(() => {
     const images: Array<{ src: string; alt: string; title: string; category: string }> = []
-    const apiBase = import.meta.env.VITE_API_BASE_URL?.replace('/api/v1', '') || 'http://localhost:3000'
+    const apiBase = (() => {
+      const envBase = import.meta.env.VITE_API_BASE_URL?.replace('/api/v1', '')
+      if (envBase) return envBase
+      if (typeof window !== 'undefined') {
+        const hostname = window.location.hostname
+        if (hostname.startsWith('www.')) {
+          return `https://api.${hostname.replace('www.', '')}`
+        }
+        return `https://api.${hostname}`
+      }
+      return 'http://localhost:3000'
+    })()
     
     events.forEach((event) => {
       // Only include images from Published events
       if (event.status === 'Published' && event.images && event.images.length > 0) {
         event.images.forEach((img) => {
           if (img.url) {
-            // Ensure image URL is absolute
-            const imageUrl = img.url.startsWith('http') ? img.url : `${apiBase}${img.url}`
+            // Ensure image URL is absolute and avoid localhost/old hosts
+            let imageUrl = img.url.startsWith('http') ? img.url : `${apiBase}${img.url}`
+            try {
+              const parsed = new URL(imageUrl)
+              const host = parsed.host
+              const isLocalhost =
+                host.startsWith('localhost') ||
+                host.startsWith('127.0.0.1') ||
+                host.startsWith('0.0.0.0')
+              const currentHost = typeof window !== 'undefined' ? window.location.host : ''
+              const isCurrentHost = currentHost && host === currentHost
+              const isWebsiteHost = host.startsWith('www.')
+
+              if ((isLocalhost || isCurrentHost || isWebsiteHost) && parsed.pathname.startsWith('/uploads/')) {
+                imageUrl = `${apiBase}${parsed.pathname}`
+              }
+            } catch (error) {
+              // ignore parse errors and keep imageUrl
+            }
             images.push({
               src: imageUrl,
               alt: img.alt || event.title,

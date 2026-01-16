@@ -7,6 +7,46 @@ import { getApiHost } from '../utils/apiClient'
 import { ApiError } from '../utils/apiClient'
 import { handleImageError } from '../utils/imageErrorHandler'
 
+/**
+ * Process image URL to ensure it's valid and accessible
+ * Handles both absolute and relative URLs, and fixes localhost issues
+ */
+const processImageUrl = (url: string | undefined | null): string => {
+  if (!url) return '/JPEG_Dark_BG.jpg'
+  
+  const apiBase = getApiHost()
+  let imageUrl = url
+  
+  // If URL is already absolute (starts with http/https)
+  if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+    try {
+      const parsed = new URL(imageUrl)
+      
+      // Extract just the pathname from the URL
+      // Always use the API base to ensure CORS and correct origin
+      if (parsed.pathname.startsWith('/uploads/')) {
+        imageUrl = `${apiBase}${parsed.pathname}`
+      }
+      // If it's a full URL but not an upload path, keep it as-is
+    } catch (error) {
+      // If URL parsing fails, try to extract path manually
+      if (imageUrl.includes('/uploads/')) {
+        const pathMatch = imageUrl.match(/\/uploads\/.+$/)
+        if (pathMatch) {
+          imageUrl = `${apiBase}${pathMatch[0]}`
+        }
+      }
+    }
+  } else {
+    // Relative URL - prepend API base
+    // Ensure it starts with / if not already
+    const path = imageUrl.startsWith('/') ? imageUrl : `/${imageUrl}`
+    imageUrl = `${apiBase}${path}`
+  }
+  
+  return imageUrl
+}
+
 export default function EventGallery() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
@@ -43,34 +83,14 @@ export default function EventGallery() {
 
   const galleryImages = useMemo(() => {
     const images: Array<{ src: string; alt: string; title: string; category: string }> = []
-    const apiBase = getApiHost()
     
     events.forEach((event) => {
       // Only include images from Published events
       if (event.status === 'Published' && event.images && event.images.length > 0) {
         event.images.forEach((img) => {
           if (img.url) {
-            // Ensure image URL is absolute and avoid localhost/old hosts
-            let imageUrl = img.url.startsWith('http') ? img.url : `${apiBase}${img.url}`
-            try {
-              const parsed = new URL(imageUrl)
-              const host = parsed.host
-              const isLocalhost =
-                host.startsWith('localhost') ||
-                host.startsWith('127.0.0.1') ||
-                host.startsWith('0.0.0.0')
-              const currentHost = typeof window !== 'undefined' ? window.location.host : ''
-              const isCurrentHost = currentHost && host === currentHost
-              const isWebsiteHost = host.startsWith('www.')
-
-              if ((isLocalhost || isCurrentHost || isWebsiteHost) && parsed.pathname.startsWith('/uploads/')) {
-                imageUrl = `${apiBase}${parsed.pathname}`
-              }
-            } catch (error) {
-              // ignore parse errors and keep imageUrl
-            }
             images.push({
-              src: imageUrl,
+              src: processImageUrl(img.url),
               alt: img.alt || event.title,
               title: event.title,
               category: event.category,
@@ -266,13 +286,7 @@ export default function EventGallery() {
                   >
                     <div className="relative h-56 overflow-hidden bg-gray-900">
                       <motion.img
-                        src={
-                          event.heroImage
-                            ? event.heroImage.startsWith('http')
-                              ? event.heroImage
-                              : `${import.meta.env.VITE_API_BASE_URL?.replace('/api/v1', '') || 'http://localhost:3000'}${event.heroImage}`
-                            : '/JPEG_Dark_BG.jpg'
-                        }
+                        src={processImageUrl(event.heroImage)}
                         alt={event.heroImageAlt || event.title}
                         className="w-full h-full object-cover"
                         onError={handleImageError}

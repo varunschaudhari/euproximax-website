@@ -85,8 +85,8 @@ export default function EventGallery() {
     const images: Array<{ src: string; alt: string; title: string; category: string }> = []
     
     events.forEach((event) => {
-      // Only include images from Published events
-      if (event.status === 'Published' && event.images && event.images.length > 0) {
+      // Include images from Published and Completed events
+      if ((event.status === 'Published' || event.status === 'Completed') && event.images && event.images.length > 0) {
         event.images.forEach((img) => {
           if (img.url) {
             images.push({
@@ -104,6 +104,10 @@ export default function EventGallery() {
 
   const filteredEvents = useMemo(() => {
     return events.filter((event) => {
+      // Only show upcoming events (Published status and future startDate, exclude Completed)
+      const isUpcoming = event.status === 'Published' && new Date(event.startDate) >= new Date()
+      if (!isUpcoming) return false
+      
       const matchesSearch =
         event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         event.description.toLowerCase().includes(searchQuery.toLowerCase()) ||

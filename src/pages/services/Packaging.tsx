@@ -67,7 +67,7 @@ export default function Packaging() {
               Your packaging is your first impression. We design solutions that stand out and communicate your brand message effectively.
             </p>
             <Link
-              to="/contact"
+              to="/consultation"
               className="inline-flex items-center px-8 py-4 bg-accent text-white rounded-xl font-semibold hover:bg-accent-700 transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 text-lg"
             >
               Book Free Consultation <ArrowRight className="ml-2" size={20} />

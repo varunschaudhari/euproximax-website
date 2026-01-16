@@ -15,6 +15,7 @@ export default function Header() {
     { path: '/event-gallery', label: 'Event Gallery' },
     { path: '/video-gallery', label: 'Video Gallery' },
     { path: '/blogs', label: 'Blogs' },
+    { path: '/consultation', label: 'Book Free Consultation' },
     { path: '/contact', label: 'Contact' },
   ]
 

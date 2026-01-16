@@ -263,10 +263,10 @@ export default function Home() {
                         className="flex flex-col sm:flex-row gap-4 justify-center items-center"
                       >
                         <Link
-                          to="/contact"
+                          to="/consultation"
                           className="group inline-flex items-center px-8 py-4 bg-accent text-white rounded-xl font-semibold hover:bg-accent-700 transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 text-lg backdrop-blur-sm"
                         >
-                          Get Started
+                          Book Free Consultation
                           <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
                         </Link>
                         <Link

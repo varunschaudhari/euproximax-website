@@ -117,6 +117,22 @@ export default function EventGallery() {
     })
   }, [events, searchQuery, selectedCategory])
 
+  const filteredPastEvents = useMemo(() => {
+    return events.filter((event) => {
+      // Show past events: Completed status OR Published events with endDate < now
+      const isPast = event.status === 'Completed' || 
+                     (event.status === 'Published' && new Date(event.endDate) < new Date())
+      if (!isPast) return false
+      
+      const matchesSearch =
+        event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        event.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        event.venue.toLowerCase().includes(searchQuery.toLowerCase())
+      const matchesCategory = selectedCategory === 'all' || event.category === selectedCategory
+      return matchesSearch && matchesCategory
+    })
+  }, [events, searchQuery, selectedCategory])
+
   const filteredImages = useMemo(() => {
     return galleryImages.filter((image) => {
       const matchesSearch = image.title.toLowerCase().includes(searchQuery.toLowerCase())
@@ -370,6 +386,131 @@ export default function EventGallery() {
                             <ArrowRight className="ml-2 group-hover/btn:translate-x-1 transition-transform" size={18} />
                           </Link>
                         )}
+                      </motion.div>
+                    </div>
+                  </motion.div>
+                )
+              })}
+            </motion.div>
+          )}
+        </div>
+      </section>
+
+      {/* Past Events Section */}
+      <section className="py-20 bg-gradient-to-br from-secondary/5 via-bg to-primary/5">
+        <div className="container-custom">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-12"
+          >
+            <h2 className="text-4xl font-bold text-text mb-4">Past Events</h2>
+            <p className="text-lg text-gray-600">
+              {filteredPastEvents.length} {filteredPastEvents.length === 1 ? 'Event' : 'Events'} completed
+            </p>
+          </motion.div>
+
+          {filteredPastEvents.length === 0 ? (
+            <div className="text-center py-20">
+              <Calendar className="mx-auto text-gray-300 mb-4" size={64} />
+              <h3 className="text-2xl font-bold text-gray-600 mb-2">No past events found</h3>
+              <p className="text-gray-500">Try adjusting your search or filter criteria</p>
+            </div>
+          ) : (
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto"
+            >
+              {filteredPastEvents.map((event) => {
+                const startDate = new Date(event.startDate)
+                const endDate = new Date(event.endDate)
+                const isSameDay = startDate.toDateString() === endDate.toDateString()
+                const dateStr = isSameDay
+                  ? startDate.toLocaleDateString('en-IN', { dateStyle: 'long' })
+                  : `${startDate.toLocaleDateString('en-IN', { dateStyle: 'medium' })} - ${endDate.toLocaleDateString('en-IN', { dateStyle: 'medium' })}`
+
+                return (
+                  <motion.div
+                    key={event._id}
+                    variants={itemVariants}
+                    whileHover={{ y: -5 }}
+                    className="group bg-surface rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-secondary/20"
+                  >
+                    <div className="relative h-56 overflow-hidden bg-gray-900">
+                      <motion.img
+                        src={processImageUrl(event.heroImage)}
+                        alt={event.heroImageAlt || event.title}
+                        className="w-full h-full object-cover"
+                        onError={handleImageError}
+                        whileHover={{ scale: 1.1 }}
+                        transition={{ duration: 0.5 }}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-gray-900/70 via-gray-900/30 to-transparent"></div>
+
+                      <div className="absolute top-4 right-4">
+                        <span className="px-3 py-1.5 bg-secondary text-white rounded-lg text-xs font-semibold">
+                          {event.status === 'Completed' ? 'Completed' : 'Past'}
+                        </span>
+                      </div>
+                      <div className="absolute top-4 left-4">
+                        <span className="px-3 py-1.5 bg-white/20 backdrop-blur-sm text-white rounded-lg text-xs font-semibold">
+                          {event.category}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="p-6">
+                      <h3 className="text-2xl font-bold text-text mb-4 group-hover:text-secondary transition-colors">
+                        {event.title}
+                      </h3>
+
+                      <div className="space-y-3 mb-4">
+                        <div className="flex items-center text-gray-600">
+                          <div className="p-2 bg-secondary/10 rounded-lg mr-3">
+                            <Calendar className="text-secondary" size={16} />
+                          </div>
+                          <span className="text-sm font-medium">{dateStr}</span>
+                        </div>
+                        <div className="flex items-center text-gray-600">
+                          <div className="p-2 bg-primary/10 rounded-lg mr-3">
+                            <MapPin className="text-primary" size={16} />
+                          </div>
+                          <span className="text-sm font-medium">{event.venue}</span>
+                        </div>
+                      </div>
+
+                      <p className="text-gray-700 text-sm leading-relaxed mb-4 line-clamp-2">{event.description}</p>
+
+                      {event.outcomes && event.outcomes.length > 0 && (
+                        <div className="mb-6">
+                          <h4 className="font-semibold text-text mb-2 text-sm">What Was Covered:</h4>
+                          <ul className="space-y-1.5">
+                            {event.outcomes.slice(0, 3).map((outcome, idx) => (
+                              <li key={idx} className="flex items-center text-gray-600 text-sm">
+                                <CheckCircle className="mr-2 text-secondary flex-shrink-0" size={14} />
+                                <span>{outcome}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+
+                      <motion.div
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <Link
+                          to={`/event/${event.slug}`}
+                          className="inline-flex items-center justify-center w-full px-6 py-3 bg-gradient-to-r from-secondary to-secondary-700 text-white rounded-xl font-semibold hover:shadow-lg transition-all group/btn"
+                        >
+                          <span>View Details</span>
+                          <ArrowRight className="ml-2 group-hover/btn:translate-x-1 transition-transform" size={18} />
+                        </Link>
                       </motion.div>
                     </div>
                   </motion.div>

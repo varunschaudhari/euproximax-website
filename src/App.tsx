@@ -21,6 +21,7 @@ import Terms from './pages/Terms'
 import Privacy from './pages/Privacy'
 import PartnerDetail from './pages/PartnerDetail'
 import Chat from './pages/Chat'
+import Apply from './pages/Apply'
 import ConsultationBooking from './pages/ConsultationBooking'
 import ConsultationConfirmation from './pages/ConsultationConfirmation'
 import { ThemeProvider } from './context/ThemeContext'
@@ -64,6 +65,8 @@ function App() {
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/partner/:slug" element={<PartnerDetail />} />
               <Route path="/chat" element={<Chat />} />
+              <Route path="/apply" element={<Apply />} />
+              <Route path="/get-started" element={<Apply />} />
               <Route path="/consultation" element={<ConsultationBooking />} />
               <Route path="/consultation/confirmation/:bookingId" element={<ConsultationConfirmation />} />
             </Route>
